@@ -328,7 +328,6 @@ var updateProperty = function (name, obj) {
 
 var redrawPage = function() {
   var $body = $('body');
-  $body.width( $(document).width() );
   
   update(pageson);
   $body.children('.circle').remove();
