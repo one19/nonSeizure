@@ -330,7 +330,7 @@ var redrawPage = function() {
   var $body = $('body');
   
   update(pageson);
-  $body.children('.circle').remove();
+  $body.children().remove();
   pageson.circles.forEach( function(e) {
     $body.append('<div class="circle ' + e.selector +
       '" style="width: ' + e.size.val +
