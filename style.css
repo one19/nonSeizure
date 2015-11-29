@@ -1,0 +1,32 @@
+body,html{
+  overflow:hidden
+}
+
+body {
+  background-color: goldenrod;
+}
+
+.square {
+  margin: 3%;
+  width: 27%;
+  height: 140px;
+  position: absolute;
+  background-color: #A55;  
+}
+
+.circle {
+  z-index: 3;
+  border-radius: 50%;
+  position: absolute;
+  background-color: #D13;
+}
+
+.test {
+  top: 2px;
+  left: 3em;
+  z-index: 4;
+  width: 30%;
+  position: absolute;
+  color: rgb(222, 211, 200);
+  background-color: rgb(255, 244, 233);
+}
