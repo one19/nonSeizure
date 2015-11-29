@@ -361,7 +361,7 @@ var redrawPage = function() {
 
 appendCircles(35);
 jsonSquares();
-//setInterval(redrawPage, 13);
+setInterval(redrawPage, 13);
 
 
 /**
