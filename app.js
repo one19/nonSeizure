@@ -80,12 +80,12 @@ pageson.background = {
     streak: minToMax(MINSTREAK, MAXSTREAK),
     del: plusOrMinus()
   },
-  red: {
+  green: {
     val: 165,
     streak: minToMax(MINSTREAK, MAXSTREAK),
     del: plusOrMinus()
   },
-  red: {
+  blue: {
     val: 32,
     streak: minToMax(MINSTREAK, MAXSTREAK),
     del: plusOrMinus()
@@ -291,7 +291,7 @@ var update = function(pjson) {
     });
   });
   Object.keys(pjson.background).forEach(function(e) {
-    pjson.background[e] = updateProperty(e, pjson.background)
+    pjson.background = updateProperty(e, pjson.background)
   })
 }
 
@@ -351,11 +351,15 @@ var redrawPage = function() {
       'px; background-color: rgb(' +
       e.red.val + ', ' + e.green.val + ', ' + e.blue.val + ');"></div>');
   });
+  $body.css({'background-color': 'rgb(' +
+      pageson.background.red.val + ', ' +
+      pageson.background.green.val + ', ' +
+      pageson.background.blue.val + ')'});
 }
 
 appendCircles(35);
 jsonSquares();
-//setInterval(redrawPage, 13);
+setInterval(redrawPage, 13);
 
 
 /**

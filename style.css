@@ -2,10 +2,6 @@ body,html{
   overflow:hidden
 }
 
-body {
-  background-color: goldenrod;
-}
-
 .square {
   margin: 3%;
   width: 27%;
