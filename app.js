@@ -10,7 +10,7 @@
 **/
 
 var MINCIRCLES = 15;
-var MAXCIRCLES = 35;
+var MAXCIRCLES = 25;
 var CIRCLENUM = 0;
 var MINSIZE = 50;
 var MAXCIRCLESIZE = 150;
@@ -328,9 +328,8 @@ var updateProperty = function (name, obj) {
 
 var redrawPage = function() {
   var $body = $('body');
-  var $docco = $(document);
-  pagewidth = $docco.width();
-  pageheight = $docco.height();
+  $body.width( $(document).width() );
+  
   update(pageson);
   $body.children('.circle').remove();
   pageson.circles.forEach( function(e) {
@@ -355,11 +354,14 @@ var redrawPage = function() {
       pageson.background.red.val + ', ' +
       pageson.background.green.val + ', ' +
       pageson.background.blue.val + ')'});
+  pagewidth = $body.width();
+  pageheight = $body.height();
 }
+
 
 appendCircles(35);
 jsonSquares();
-setInterval(redrawPage, 13);
+//setInterval(redrawPage, 13);
 
 
 /**
@@ -470,7 +472,3 @@ var runTests = function () {
   makeRandomColor_test(100000);
   getVal_test();
 }
-
-
-//benj@benj.com.au
-//  --peter the recruiter contact deets
