@@ -7,7 +7,8 @@ body,html{
   width: 27%;
   height: 140px;
   position: absolute;
-  background-color: #A55;  
+  background-color: #A55;
+  border-radius: 30px;
 }
 
 .circle {

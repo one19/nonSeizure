@@ -7,8 +7,8 @@
 
 **/
 
-var MINCIRCLES = 15;
-var MAXCIRCLES = 25;
+var MINCIRCLES = 25;
+var MAXCIRCLES = 35;
 var CIRCLENUM = 0;
 var MINSIZE = 50;
 var MAXCIRCLESIZE = 150;
@@ -18,6 +18,19 @@ var DELTA = 2;
 
 var pagewidth = $(window).width();
 var pageheight = $(window).height() - 100;
+var margin = Math.floor(pagewidth * 0.03);
+var damargin = (margin * 6);
+
+var maxPrimeWidth = Math.floor(pagewidth * 0.4);
+var minPrimeWidth = Math.floor(pagewidth * 0.3);
+var maxWidth = Math.floor(pagewidth * 0.25);
+var minWidth = Math.floor(pagewidth * 0.2);
+
+var maxPrimeHeight = Math.floor( (pageheight - damargin) * 0.4);
+var minPrimeHeight = Math.floor( (pageheight - damargin) * 0.3);
+var maxHeight = Math.floor((pageheight - damargin) * 0.25);
+var minHeight = Math.floor((pageheight - damargin) * 0.2);
+
 var pageson = {
   widthPriority: {
     top: ['a0', 'a1', 'a2'],
@@ -136,19 +149,7 @@ var appendCircles = function(circleCount) {
 };
 
 var jsonSquares = function(pjson) {
-  var margin = Math.floor(pagewidth * 0.03);
-  var damargin = (margin * 6);
-  var cNums = makeRandomColor();
-
-  var maxPrimeWidth = Math.floor(pagewidth * 0.4);
-  var minPrimeWidth = Math.floor(pagewidth * 0.3);
-  var maxWidth = Math.floor(pagewidth * 0.25);
-  var minWidth = Math.floor(pagewidth * 0.2);
-
-  var maxPrimeHeight = Math.floor( (pageheight - damargin) * 0.4);
-  var minPrimeHeight = Math.floor( (pageheight - damargin) * 0.3);
-  var maxHeight = Math.floor((pageheight - damargin) * 0.25);
-  var minHeight = Math.floor((pageheight - damargin) * 0.2);
+var cNums = makeRandomColor();
 
   for (var i = 0; i < 9; i++) {
     var cNums = makeRandomColor();
@@ -275,11 +276,103 @@ var update = function(pjson) {
   });
   Object.keys(pjson.background).forEach(function(e) {
     pjson.background = updateProperty(e, pjson.background)
-  })
+  });
+
+  Object.keys(pjson.widthPriority).forEach(function(e, i) {
+    var primeWidth = 0;
+    var midWidth = 0;
+
+    pjson.widthPriority[e].forEach(function(r, j) {
+      var index = parseInt(r.slice(1));
+      var obj = pjson.squares[index];
+
+      if (j === 0) { //PRIME
+        var width = obj.width.val + (DELTA * obj.width.del);
+        if ( (width > maxPrimeWidth) || (width < minPrimeWidth) ) obj.width.del = obj.width.del * -1;
+        var upDWidth = obj.width.val + (DELTA * obj.width.del);
+        primeWidth = width;
+      } else if (j === 1) { //SECOND PRIME
+        var width = obj.width.val + (DELTA * obj.width.del);
+        if ( (width > maxWidth) || (width < minWidth) ) obj.width.del = obj.width.del * -1;
+        var upDWidth = obj.width.val + (DELTA * obj.width.del);
+        midWidth = width;
+      } else { //SHRINKYDINK
+        var upDWidth = pagewidth - damargin - primeWidth - midWidth;
+      }
+
+      pjson.squares[index].width.val = upDWidth;
+      pjson.squares[index].width.streak--;
+      if (pjson.squares[index].width.streak === 0) {
+        pjson.squares[index].width.streak = minToMax(MINSTREAK, MAXSTREAK);
+        pjson.squares[index].width.del = minToMax(-1, 1);
+      }
+    });
+
+    for (var k = 0; k < 3; k++) {
+      var ind = k + (i * 3);
+      if (k === 0) {
+        pjson.squares[ind].left.val = 0;
+      } else if (k === 1) {
+        pjson.squares[ind].left.val = (margin * 2) +
+          pjson.squares[ind - 1].width.val;
+      } else {
+        pjson.squares[ind].left.val = (margin * 4) +
+          pjson.squares[ind - 1].width.val +
+          pjson.squares[ind - 2].width.val;
+      }
+    }
+  });
+
+  // Object.keys(pjson.heightPriority).forEach(function(e, i) {
+  //   var primeHeight = 0;
+  //   var midHeight = 0;
+
+  //   pjson.heightPriority[e].forEach(function(r, j) {
+  //     var index = parseInt(r.slice(1));
+  //     var obj = pjson.squares[index];
+
+  //     if (j === 0) {
+  //       var height = obj.height.val + (DELTA * obj.height.del);
+  //       if ( (height > maxPrimeHeight) || (height < minPrimeHeight) ) obj.height.del = obj.height.del * -1;
+  //       var upDHeight = obj.height.val + (DELTA * obj.height.del);
+  //       primeHeight = height;
+  //     } else if (j === 2) {
+  //       var width = obj.height.val + (DELTA * obj.height.del);
+  //       if ( (height > maxHeight) || (height < minHeight) ) obj.height.del = obj.height.del * -1;
+  //       var upDHeight = obj.height.val + (DELTA * obj.height.del);
+  //       midHeight = height;
+  //     } else {
+  //       var upDHeight = pageheight - damargin - primeHeight - midHeight;
+  //     }
+
+  //     pjson.squares[index].height.val = upDHeight;
+  //     pjson.squares[index].height.streak--;
+  //     if (pjson.squares[index].height.streak === 0) {
+  //       pjson.squares[index].height.streak = minToMax(MINSTREAK, MAXSTREAK);
+  //       pjson.squares[index].height.del = minToMax(-1, 1);
+  //     }
+  //   });
+
+  //   for (var i = 0; i < 3; i++) {
+  //     for (var k = 0; k < 3; k++) {
+  //       var ind = (i * 3) + k;
+  //       if (i === 0) {
+  //         pjson.squares[ind].top.val = 0;
+  //       } else if (i === 1) {
+  //         pjson.squares[ind].top.val = (margin * 2) +
+  //           pjson.squares[ind - 3].height.val;
+  //       } else {
+  //         pjson.squares[ind].top.val = (margin * 4) +
+  //           pjson.squares[ind - 3].height.val +
+  //           pjson.squares[ind - 6].height.val;
+  //       }
+  //     }
+  //   }
+  // });
 };
 
 var updateProperty = function (name, obj) {
-  if (name === 'selector') return obj;
+  if ((name === 'selector') || (name === 'width') || (name === 'height')) return obj;
 
   var maxy = 0;
   var miny = 0;
@@ -294,8 +387,6 @@ var updateProperty = function (name, obj) {
   } else if (name === 'size') {
     maxy = MAXCIRCLESIZE;
     miny = MINSIZE;
-  } else if ((name === 'width') || (name === 'height')) {
-    
   }
 
   if (obj[name].streak <= 0) {
