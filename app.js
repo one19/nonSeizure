@@ -1,11 +1,9 @@
 /**
-
-  ____ _     ___  ____    _    _      __     ___    ____  ____  
- / ___| |   / _ \| __ )  / \  | |     \ \   / / \  |  _ \/ ___| 
-| |  _| |  | | | |  _ \ / _ \ | |      \ \ / / _ \ | |_) \___ \ 
+  ____ _     ___  ____    _    _      __     ___    ____  ____
+ / ___| |   / _ \| __ )  / \  | |     \ \   / / \  |  _ \/ ___|
+| |  _| |  | | | |  _ \ / _ \ | |      \ \ / / _ \ | |_) \___ \
 | |_| | |__| |_| | |_) / ___ \| |___    \ V / ___ \|  _ < ___) |
- \____|_____\___/|____/_/   \_\_____|    \_/_/   \_\_| \_\____/ 
-                                                                
+ \____|_____\___/|____/_/   \_\_____|    \_/_/   \_\_| \_\____/
 
 **/
 
@@ -33,29 +31,27 @@ var pageson = {
   },
   squares: [],
   circles: []
-}
+};
 
 
 /**
-
- _____ _   _ _   _  ____ _____ ___ ___  _   _ ____  
-|  ___| | | | \ | |/ ___|_   _|_ _/ _ \| \ | / ___| 
-| |_  | | | |  \| | |     | |  | | | | |  \| \___ \ 
+ _____ _   _ _   _  ____ _____ ___ ___  _   _ ____
+|  ___| | | | \ | |/ ___|_   _|_ _/ _ \| \ | / ___|
+| |_  | | | |  \| | |     | |  | | | | |  \| \___ \
 |  _| | |_| | |\  | |___  | |  | | |_| | |\  |___) |
-|_|    \___/|_| \_|\____| |_| |___\___/|_| \_|____/ 
-                                                    
+|_|    \___/|_| \_|\____| |_| |___\___/|_| \_|____/
 
 **/
 
 //produces either +1 or -1 with 50% chance for both
 var plusOrMinus = function() {
   return [-1,1][Math.random()*2|0];
-}
+};
 
 //produces round number between min and max with even distribution
 var minToMax = function(min, max) {
   return Math.floor((Math.random() * (max - min + 1)) + min);
-}
+};
 
 CIRCLENUM = minToMax(MINCIRCLES, MAXCIRCLES);
 
@@ -72,7 +68,8 @@ var getVal = function(selector, cssWithin) {
   } else {
     return [parseInt(ret.slice(0, -2))];
   }
-}
+};
+
 var jsonBackground = function(pjson) {
   pjson.background = {
     red: {
@@ -91,7 +88,7 @@ var jsonBackground = function(pjson) {
       del: plusOrMinus()
     }
   }
-}
+};
 
 
 //creates the circles that will move randomly about the page, and gives them
@@ -151,7 +148,7 @@ var appendCircles = function(circleCount) {
       }
     });
   }
-}
+};
 
 var jsonSquares = function(pjson) {
   var margin = Math.floor(pagewidth * 0.03);
@@ -209,7 +206,7 @@ var jsonSquares = function(pjson) {
   Object.keys(pjson.widthPriority).forEach(function(e, i) {
     var primeWidth = 0;
     var midWidth = 0;
-    
+
     pjson.widthPriority[e].forEach(function(r, j) {
       var index = parseInt(r.slice(1));
       if (j === 0) {
@@ -242,7 +239,7 @@ var jsonSquares = function(pjson) {
   Object.keys(pjson.heightPriority).forEach(function(e, i) {
     var primeHeight = 0;
     var midHeight = 0;
-    
+
     pjson.heightPriority[e].forEach(function(r, j) {
       var index = parseInt(r.slice(1));
       if (j === 0) {
@@ -273,11 +270,11 @@ var jsonSquares = function(pjson) {
       }
     }
   });
-}
+};
 
 var makeRandomColor = function() {
   return [minToMax(0,255), minToMax(0,255), minToMax(0,255)];
-}
+};
 
 var update = function(pjson) {
   pjson.circles.forEach(function(circle, ind) {
@@ -294,7 +291,7 @@ var update = function(pjson) {
   Object.keys(pjson.background).forEach(function(e) {
     pjson.background = updateProperty(e, pjson.background)
   })
-}
+};
 
 var updateProperty = function (name, obj) {
   if (name === 'selector') return obj;
@@ -314,7 +311,7 @@ var updateProperty = function (name, obj) {
     miny = MINSIZE;
   } else if ((name === 'width') || (name === 'height'))
 
-  if (obj[name].streak === 0) {
+  if (obj[name].streak <= 0) {
     obj[name].streak = minToMax(MINSTREAK, MAXSTREAK);
     obj[name].del = plusOrMinus();
   } else {
@@ -329,9 +326,10 @@ var updateProperty = function (name, obj) {
 
 var redrawPage = function() {
   var $body = $('body');
-  
+
   update(pageson);
   $body.children().remove();
+  var appendString = '';
   pageson.circles.forEach( function(e) {
     $body.append('<div class="circle ' + e.selector +
       '" style="width: ' + e.size.val +
@@ -355,23 +353,22 @@ var redrawPage = function() {
       pageson.background.green.val + ', ' +
       pageson.background.blue.val + ')'});
   pagewidth = $body.width();
-  pageheight = $body.height();
 }
 
 
-appendCircles(35);
+appendCircles(CIRCLENUM);
 jsonSquares(pageson);
 jsonBackground(pageson);
 setInterval(redrawPage, 13);
 
 
 /**
- _____ _____ ____ _____ ____  
-|_   _| ____/ ___|_   _/ ___| 
-  | | |  _| \___ \ | | \___ \ 
+ _____ _____ ____ _____ ____
+|_   _| ____/ ___|_   _/ ___|
+  | | |  _| \___ \ | | \___ \
   | | | |___ ___) || |  ___) |
-  |_| |_____|____/ |_| |____/ 
-                              
+  |_| |_____|____/ |_| |____/
+
 **/
 
 //Input the number of iterations to check the result for bias
