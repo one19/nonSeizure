@@ -17,7 +17,7 @@ var MAXSTREAK = 120;
 var DELTA = 2;
 
 var pagewidth = $(window).width();
-var pageheight = $(window).height();
+var pageheight = $(window).height() - 100;
 var pageson = {
   widthPriority: {
     top: ['a0', 'a1', 'a2'],
@@ -54,21 +54,6 @@ var minToMax = function(min, max) {
 };
 
 CIRCLENUM = minToMax(MINCIRCLES, MAXCIRCLES);
-
-//returns an array of integers because apparently jquery is retarded, and can
-//only give back things in `rgb` and `px`
-var getVal = function(selector, cssWithin) {
-  var ret = $(selector).css(cssWithin);
-
-  if ((cssWithin === 'background-color') || (cssWithin === 'color')) {
-    var toteString = ret.slice(4, -1).split(', ');
-    return [parseInt(toteString[0]), parseInt(toteString[1]), parseInt(toteString[2])];
-  } else if (cssWithin === 'z-index') {
-    return [parseInt(ret)];
-  } else {
-    return [parseInt(ret.slice(0, -2))];
-  }
-};
 
 var jsonBackground = function(pjson) {
   pjson.background = {
@@ -309,7 +294,9 @@ var updateProperty = function (name, obj) {
   } else if (name === 'size') {
     maxy = MAXCIRCLESIZE;
     miny = MINSIZE;
-  } else if ((name === 'width') || (name === 'height'))
+  } else if ((name === 'width') || (name === 'height')) {
+    
+  }
 
   if (obj[name].streak <= 0) {
     obj[name].streak = minToMax(MINSTREAK, MAXSTREAK);
@@ -401,19 +388,6 @@ var minToMax_test = function(iterations, min, max) {
   console.log(ret);
 }
 
-var getVal_test = function(){
-  $('body').append('<div class="test">test</div>');
-  console.log('done appending')
-  console.log('test.color: rgb(222, 211, 200)', getVal('.test', 'color'))
-  console.log('test.background-color: rgb(255, 244, 233)', getVal('.test', 'background-color'))
-  console.log('test.z-index: 4', getVal('.test', 'z-index'))
-  console.log('test.top: 2px', getVal('.test', 'top'))
-  console.log('test.left: ~' + 16 * 3 + 'px', getVal('.test', 'left'))
-  console.log('test.width: ~' + $('body').width() * 0.3 + 'px', getVal('.test', 'width'))
-  $('.test').remove()
-  console.log('div removed')
-}
-
 var appendCircles_test = function(val) {
   appendCircles(val);
   if ($('.circle').length === val) console.log('Correctly appended ' + val + ' circles.');
@@ -468,5 +442,4 @@ var runTests = function () {
   minToMax_test(1000, 3, 9);
   appendCircles_test(30);
   makeRandomColor_test(100000);
-  getVal_test();
 }
