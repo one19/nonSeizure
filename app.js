@@ -73,22 +73,23 @@ var getVal = function(selector, cssWithin) {
     return [parseInt(ret.slice(0, -2))];
   }
 }
-
-pageson.background = {
-  red: {
-    val: 218,
-    streak: minToMax(MINSTREAK, MAXSTREAK),
-    del: plusOrMinus()
-  },
-  green: {
-    val: 165,
-    streak: minToMax(MINSTREAK, MAXSTREAK),
-    del: plusOrMinus()
-  },
-  blue: {
-    val: 32,
-    streak: minToMax(MINSTREAK, MAXSTREAK),
-    del: plusOrMinus()
+var jsonBackground = function(pjson) {
+  pjson.background = {
+    red: {
+      val: 218,
+      streak: minToMax(MINSTREAK, MAXSTREAK),
+      del: plusOrMinus()
+    },
+    green: {
+      val: 165,
+      streak: minToMax(MINSTREAK, MAXSTREAK),
+      del: plusOrMinus()
+    },
+    blue: {
+      val: 32,
+      streak: minToMax(MINSTREAK, MAXSTREAK),
+      del: plusOrMinus()
+    }
   }
 }
 
@@ -152,7 +153,7 @@ var appendCircles = function(circleCount) {
   }
 }
 
-var jsonSquares = function() {
+var jsonSquares = function(pjson) {
   var margin = Math.floor(pagewidth * 0.03);
   var damargin = (margin * 6);
   var cNums = makeRandomColor();
@@ -169,7 +170,7 @@ var jsonSquares = function() {
 
   for (var i = 0; i < 9; i++) {
     var cNums = makeRandomColor();
-    pageson.squares.push({
+    pjson.squares.push({
       selector: 'a' + i,
       red: {
         val: cNums[0],
@@ -205,11 +206,11 @@ var jsonSquares = function() {
     });
   }
 
-  Object.keys(pageson.widthPriority).forEach(function(e, i) {
+  Object.keys(pjson.widthPriority).forEach(function(e, i) {
     var primeWidth = 0;
     var midWidth = 0;
     
-    pageson.widthPriority[e].forEach(function(r, j) {
+    pjson.widthPriority[e].forEach(function(r, j) {
       var index = parseInt(r.slice(1));
       if (j === 0) {
         var width = minToMax(minPrimeWidth, maxPrimeWidth);
@@ -220,29 +221,29 @@ var jsonSquares = function() {
       } else {
         var width = pagewidth - damargin - primeWidth - midWidth;
       }
-      pageson.squares[index].width.val = width;
+      pjson.squares[index].width.val = width;
     });
 
     for (var k = 0; k < 3; k++) {
       var ind = k + (i * 3);
       if (k === 0) {
-        pageson.squares[ind].left.val = margin;
+        pjson.squares[ind].left.val = 0;
       } else if (k === 1) {
-        pageson.squares[ind].left.val = (margin * 3) +
-          pageson.squares[ind - 1].width.val;
+        pjson.squares[ind].left.val = (margin * 2) +
+          pjson.squares[ind - 1].width.val;
       } else {
-        pageson.squares[ind].left.val = (margin * 5) +
-          pageson.squares[ind - 1].width.val +
-          pageson.squares[ind - 2].width.val;
+        pjson.squares[ind].left.val = (margin * 4) +
+          pjson.squares[ind - 1].width.val +
+          pjson.squares[ind - 2].width.val;
       }
     }
   });
 
-  Object.keys(pageson.heightPriority).forEach(function(e, i) {
+  Object.keys(pjson.heightPriority).forEach(function(e, i) {
     var primeHeight = 0;
     var midHeight = 0;
     
-    pageson.heightPriority[e].forEach(function(r, j) {
+    pjson.heightPriority[e].forEach(function(r, j) {
       var index = parseInt(r.slice(1));
       if (j === 0) {
         var height = minToMax(minPrimeHeight, maxPrimeHeight);
@@ -253,21 +254,21 @@ var jsonSquares = function() {
       } else {
         var height = pageheight - damargin - primeHeight - midHeight;
       }
-      pageson.squares[index].height.val = height;
+      pjson.squares[index].height.val = height;
     });
 
     for (var i = 0; i < 3; i++) {
       for (var k = 0; k < 3; k++) {
         var ind = (i * 3) + k;
         if (i === 0) {
-          pageson.squares[ind].top.val = margin;
+          pjson.squares[ind].top.val = 0;
         } else if (i === 1) {
-          pageson.squares[ind].top.val = (margin * 3) +
-            pageson.squares[ind - 3].height.val;
+          pjson.squares[ind].top.val = (margin * 2) +
+            pjson.squares[ind - 3].height.val;
         } else {
-          pageson.squares[ind].top.val = (margin * 5) +
-            pageson.squares[ind - 3].height.val +
-            pageson.squares[ind - 6].height.val;
+          pjson.squares[ind].top.val = (margin * 4) +
+            pjson.squares[ind - 3].height.val +
+            pjson.squares[ind - 6].height.val;
         }
       }
     }
@@ -359,7 +360,8 @@ var redrawPage = function() {
 
 
 appendCircles(35);
-jsonSquares();
+jsonSquares(pageson);
+jsonBackground(pageson);
 setInterval(redrawPage, 13);
 
 
