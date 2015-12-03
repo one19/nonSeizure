@@ -20,16 +20,22 @@ var pagewidth = $(window).width();
 var pageheight = $(window).height() - 100;
 var margin = Math.floor(pagewidth * 0.03);
 var damargin = (margin * 6);
+var minColor = 130;
+var maxColor = 230;
 
 var maxPrimeWidth = Math.floor(pagewidth * 0.4);
 var minPrimeWidth = Math.floor(pagewidth * 0.3);
 var maxWidth = Math.floor(pagewidth * 0.25);
 var minWidth = Math.floor(pagewidth * 0.2);
 
-var maxPrimeHeight = Math.floor( (pageheight - damargin) * 0.4);
-var minPrimeHeight = Math.floor( (pageheight - damargin) * 0.3);
+var maxPrimeHeight = Math.floor((pageheight - damargin) * 0.4);
+console.log('maxprimeheight', maxPrimeHeight)
+var minPrimeHeight = Math.floor((pageheight - damargin) * 0.3);
+console.log('minprimeheight', minPrimeHeight)
 var maxHeight = Math.floor((pageheight - damargin) * 0.25);
+console.log('maxheight', maxHeight)
 var minHeight = Math.floor((pageheight - damargin) * 0.2);
+console.log('maxheight', minHeight)
 
 var pageson = {
   widthPriority: {
@@ -259,7 +265,7 @@ var cNums = makeRandomColor();
 };
 
 var makeRandomColor = function() {
-  return [minToMax(0,255), minToMax(0,255), minToMax(0,255)];
+  return [minToMax(minColor,maxColor), minToMax(minColor,maxColor), minToMax(minColor,maxColor)];
 };
 
 var update = function(pjson) {
@@ -323,52 +329,50 @@ var update = function(pjson) {
     }
   });
 
-  // Object.keys(pjson.heightPriority).forEach(function(e, i) {
-  //   var primeHeight = 0;
-  //   var midHeight = 0;
+  Object.keys(pjson.heightPriority).forEach(function(e, t) {
+    var primeHeight = 0;
+    var midHeight = 0;
 
-  //   pjson.heightPriority[e].forEach(function(r, j) {
-  //     var index = parseInt(r.slice(1));
-  //     var obj = pjson.squares[index];
+    pjson.heightPriority[e].forEach(function(r, j) {
+      var index = parseInt(r.slice(1));
+      var obj = pjson.squares[index];
 
-  //     if (j === 0) {
-  //       var height = obj.height.val + (DELTA * obj.height.del);
-  //       if ( (height > maxPrimeHeight) || (height < minPrimeHeight) ) obj.height.del = obj.height.del * -1;
-  //       var upDHeight = obj.height.val + (DELTA * obj.height.del);
-  //       primeHeight = height;
-  //     } else if (j === 2) {
-  //       var width = obj.height.val + (DELTA * obj.height.del);
-  //       if ( (height > maxHeight) || (height < minHeight) ) obj.height.del = obj.height.del * -1;
-  //       var upDHeight = obj.height.val + (DELTA * obj.height.del);
-  //       midHeight = height;
-  //     } else {
-  //       var upDHeight = pageheight - damargin - primeHeight - midHeight;
-  //     }
+      if (index % 3 === 0) {
+        var height = obj.height.val + (DELTA * obj.height.del);
+        if ( (height >= maxPrimeHeight) || (height <= minPrimeHeight) ) obj.height.del = obj.height.del * -1;
+        var upDHeight = obj.height.val + (DELTA * obj.height.del);
+        primeHeight = upDHeight;
+      } else if (index % 3 === 1) {
+        var height = obj.height.val + (DELTA * obj.height.del);
+        if ( (height >= maxHeight) || (height <= minHeight) ) obj.height.del = obj.height.del * -1;
+        var upDHeight = obj.height.val + (DELTA * obj.height.del);
+        midHeight = upDHeight;
+      } else {
+        var upDHeight = pageheight - damargin - primeHeight - midHeight;
+      }
+      console.log('index', index, 'height', upDHeight)
+      pjson.squares[index].height.val = upDHeight;
+      pjson.squares[index].height.streak--;
+      if (pjson.squares[index].height.streak === 0) {
+        pjson.squares[index].height.streak = minToMax(MINSTREAK, MAXSTREAK);
+        pjson.squares[index].height.del = minToMax(-1, 1);
+      }
+    });
+  });
 
-  //     pjson.squares[index].height.val = upDHeight;
-  //     pjson.squares[index].height.streak--;
-  //     if (pjson.squares[index].height.streak === 0) {
-  //       pjson.squares[index].height.streak = minToMax(MINSTREAK, MAXSTREAK);
-  //       pjson.squares[index].height.del = minToMax(-1, 1);
-  //     }
-  //   });
-
-  //   for (var i = 0; i < 3; i++) {
-  //     for (var k = 0; k < 3; k++) {
-  //       var ind = (i * 3) + k;
-  //       if (i === 0) {
-  //         pjson.squares[ind].top.val = 0;
-  //       } else if (i === 1) {
-  //         pjson.squares[ind].top.val = (margin * 2) +
-  //           pjson.squares[ind - 3].height.val;
-  //       } else {
-  //         pjson.squares[ind].top.val = (margin * 4) +
-  //           pjson.squares[ind - 3].height.val +
-  //           pjson.squares[ind - 6].height.val;
-  //       }
-  //     }
-  //   }
-  // });
+  for (var i = 0; i < 8; i++) {
+    if (i < 3) {
+      pjson.squares[i].top.val = 0;
+    } else if (i < 6) {
+      pjson.squares[i].top.val = (margin * 2) +
+        pjson.squares[i - 3].height.val;
+    } else {
+      pjson.squares[i].top.val = (margin * 4) +
+        pjson.squares[i - 3].height.val +
+        pjson.squares[i - 6].height.val;
+    }
+  }
+  
 };
 
 var updateProperty = function (name, obj) {
@@ -377,8 +381,8 @@ var updateProperty = function (name, obj) {
   var maxy = 0;
   var miny = 0;
   if ((name === 'red') || (name ===  'green') || (name === 'blue')) {
-    maxy = 255;
-    miny = 0;
+    maxy = maxColor;
+    miny = minColor;
   } else if ((name === 'top') || (name === 'left')) {
     var offset = Math.round(obj.size.val / 2);
     maxy = pagewidth - offset;
@@ -407,7 +411,6 @@ var redrawPage = function() {
 
   update(pageson);
   $body.children().remove();
-  var appendString = '';
   pageson.circles.forEach( function(e) {
     $body.append('<div class="circle ' + e.selector +
       '" style="width: ' + e.size.val +
@@ -521,7 +524,7 @@ var makeRandomColor_test = function (iterations) {
   Object.keys(res).forEach(function(e) {
     if (res[e] <= min) { min = res[e]; minE = e; };
     if (res[e] >= max) { max = res[e]; maxE = e; };
-    if (parseInt(e) > 255 || e < 0) console.log('ERROR, color out of bounds')
+    if (parseInt(e) > 230 || e < 0) console.log('ERROR, color out of bounds')
   });
 
   console.log('Min and max values in our color array are: ' + min + ', ' + max + '.');
