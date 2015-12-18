@@ -3,10 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <title>Test</title>
+  <link rel="stylesheet" href= "./normalize.css">
   <link rel="stylesheet" href="./style.css">
   <script type="text/javascript" src="jquery-1.11.3.min.js"></script>
 </head>
 <body>
+  <div class="button flying" id="settingsModal">SETTINGS</div>
+  <div class="modal">
+    <div class="top">
+      <h3>Settings</h3>
+    </div>
+    <div class="content">
+      <div class="circleSettings settings">
+        <p>Circle Settings</p>
+        <p>Add/Remove 1 Circle:</p>
+        <div id="addCircle" class="button">+</div>
+        <div id="removeCircle" class="button">-</div>
+        <p>This many circles:</p>
+        <input type="integer" id="theCircle">
+        <div id="submitCircle" class="button">Submit</div>
+      </div>
+      <div class="squareSettings settings"></div>
+      <div class="otherSettings settings"></div>
+    </div>
+    <div class="bottom button" id="closeModal">x</div>
+  </div>
+  <div id="cray"></div>
   <script type="text/javascript" src="app.js"></script>
 </body>
 </html>

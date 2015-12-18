@@ -32,7 +32,8 @@ var pageson = {
     rig: ['a8', 'a5', 'a2']
   },
   squares: [],
-  circles: []
+  circles: [],
+  ms: 13
 }
 
 
@@ -93,19 +94,22 @@ pageson.background = {
 }
 
 
-//creates the circles that will move randomly about the page, and gives them
-//initial locations, and sizes
+//creates the circles that will move randomly about the page
 //returns an object with their relevant data
 var jsonCircles = function(circleCount) {
 
+  var startNum = $('.circle').length;
+  if (circleCount < 0) pageson.circles.splice( circleCount, circleCount * -1);
+  if (circleCount === 0) pageson.circles = [];
+
   for (var i = 0; i < circleCount; i++) {
-    var selector = 'b' + i;
-    $('body').append('<div class="circle ' + selector + '"></div>');
+    var selector = 'b' + (i + startNum);
 
     var size = minToMax(MINSIZE, MAXCIRCLESIZE);
     var offset = Math.round(size/2);
-    var top = minToMax( 0 - offset, pageheight - offset );
+    var top = minToMax( 0 - offset, pageheight - offset + 70);
     var left = minToMax( 0 - offset, pagewidth - offset );
+    var bNums = makeRandomColor();
     var cNums = makeRandomColor();
 
     pageson.circles.push({
@@ -116,17 +120,17 @@ var jsonCircles = function(circleCount) {
         del: plusOrMinus()
       },
       bRed: {
-        val: cNums[0],
+        val: bNums[0],
         streak: minToMax(MINSTREAK, MAXSTREAK),
         del: plusOrMinus()
       },
       bGreen: {
-        val: cNums[1],
+        val: bNums[1],
         streak: minToMax(MINSTREAK, MAXSTREAK),
         del: plusOrMinus()
       },
       bBlue: {
-        val: cNums[2],
+        val: bNums[2],
         streak: minToMax(MINSTREAK, MAXSTREAK),
         del: plusOrMinus()
       },
@@ -180,6 +184,7 @@ var jsonSquares = function() {
   var minHeight = Math.floor((pageheight - 100 - damargin) * 0.2);
 
   for (var i = 0; i < 9; i++) {
+    var bNums = makeRandomColor();
     var cNums = makeRandomColor();
     pageson.squares.push({
       selector: 'a' + i,
@@ -189,17 +194,17 @@ var jsonSquares = function() {
         del: plusOrMinus()
       },
       bRed: {
-        val: cNums[0],
+        val: bNums[0],
         streak: minToMax(MINSTREAK, MAXSTREAK),
         del: plusOrMinus()
       },
       bGreen: {
-        val: cNums[1],
+        val: bNums[1],
         streak: minToMax(MINSTREAK, MAXSTREAK),
         del: plusOrMinus()
       },
       bBlue: {
-        val: cNums[2],
+        val: bNums[2],
         streak: minToMax(MINSTREAK, MAXSTREAK),
         del: plusOrMinus()
       },
@@ -333,7 +338,7 @@ var update = function(pjson) {
 }
 
 var updateProperty = function (name, obj) {
-  if (name === 'selector') return obj;
+  if ((name === 'selector') || (name === 'width') || (name === 'height')) return obj;
 
   var maxy = 0;
   var miny = 0;
@@ -349,10 +354,6 @@ var updateProperty = function (name, obj) {
   } else if (name === 'size') {
     maxy = MAXCIRCLESIZE;
     miny = MINSIZE;
-  } else if ((name === 'width') || (name === 'height')) {
-    
-    //TODO MOTHRFUCKER, JUST COPY THAT SHIZ FROM WHENCE YOU FIXED IT BEFORE
-
   } else if (name === 'borderWidth') {
     miny = 3;
     maxy = Math.floor(MAXCIRCLESIZE * 0.15);
@@ -373,12 +374,12 @@ var updateProperty = function (name, obj) {
 }
 
 var redrawPage = function() {
-  var $body = $('body');
-  
+  var $cray = $('#cray');
+
   update(pageson);
-  $body.children().remove();
+  $cray.children().remove();
   pageson.circles.forEach( function(e) {
-    $body.append('<div class="circle ' + e.selector +
+    $cray.append('<div class="circle ' + e.selector +
       '" style="width: ' + e.size.val +
       'px; height: ' + e.size.val +
       'px; top: ' + e.top.val +
@@ -389,7 +390,7 @@ var redrawPage = function() {
       e.bRed.val + ', ' + e.bGreen.val + ', ' + e.bBlue.val +');"></div>');
   });
   pageson.squares.forEach( function(e) {
-    $body.append('<div class="square ' + e.selector +
+    $cray.append('<div class="square ' + e.selector +
       '" style="width: ' + e.width.val +
       'px; height: ' + e.height.val +
       'px; top: ' + e.top.val +
@@ -399,17 +400,46 @@ var redrawPage = function() {
       '); border: ' + e.borderWidth.val + 'px solid rgb(' +
       e.bRed.val + ', ' + e.bGreen.val + ', ' + e.bBlue.val +');"></div>');
   });
-  $body.css({'background-color': 'rgb(' +
+  $cray.css({'background-color': 'rgb(' +
       pageson.background.red.val + ', ' +
       pageson.background.green.val + ', ' +
       pageson.background.blue.val + ')'});
-  pagewidth = $body.width();
+  $cray.css({'height': pageheight + 70 + 'px'})
+  pagewidth = $cray.width();
 }
 
 
-jsonCircles(35);
+jsonCircles(20);
 jsonSquares();
-setInterval(redrawPage, 13);
+var intervalID = setInterval(redrawPage, pageson.ms);
+
+$('.button').on('click', function(e) {
+  console.log(e)
+  if (e.target.id === 'settingsModal') {
+    clearInterval(intervalID);
+    intervalID = setInterval(redrawPage, 500);
+    $('#settingsModal').css({'display': 'none'});
+    $('.modal').css({'display': 'block'});
+  } else if (e.target.id === 'closeModal') {
+    $('#settingsModal').css({'display': 'block'});
+    $('.modal').css({'display': 'none'});
+    clearInterval(intervalID)
+    intervalID = setInterval(redrawPage, pageson.ms);
+  } else if (e.target.id === 'addCircle') {
+    jsonCircles(1);
+  } else if (e.target.id === 'removeCircle') {
+    jsonCircles(-1);
+  } else if (e.target.id === 'submitCircle') {
+    jsonCircles(0);
+    jsonCircles(parseInt($('#theCircle').val()));
+  }
+
+});
+
+$('#theCircle').on('enter', function() {
+  jsonCircles(0);
+  jsonCircles(parseInt($('#theCircle').val()));
+})
 
 
 /**

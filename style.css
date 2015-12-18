@@ -1,5 +1,11 @@
 body,html{
-  overflow:hidden
+  overflow:hidden;
+  text-align: center;
+}
+
+p {
+  margin: 5px;
+  color: white;
 }
 
 .square {
@@ -28,4 +34,42 @@ body,html{
   position: absolute;
   color: rgb(222, 211, 200);
   background-color: rgb(255, 244, 233);
+}
+
+.flying, .modal {
+  position: fixed;
+}
+
+.button {
+  top: 0;
+  left: 0;
+  z-index: 30;
+  background-color: #119119;
+  padding: 5px;
+  border-radius: 5px;
+  display: inline-block;
+  margin: 5px;
+}
+
+.top {
+  text-align: center;
+}
+
+.modal {
+  width: 100%;
+  height: 500px;
+  z-index: 50;
+  display: none;
+  margin: auto;
+  background-color: rgba(0,0,0,0.6);
+}
+
+.settings {
+  background-color: rgba(0,0,0,0.6);
+  margin: 30px;
+  width: 30%;
+}
+
+.settings:hover{
+  background-color: rgba(0,0,0,0.2);
 }
