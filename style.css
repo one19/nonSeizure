@@ -8,6 +8,8 @@ body,html{
   height: 140px;
   position: absolute;
   background-color: #A55;  
+  box-sizing: border-box;
+  border-radius: 15px;
 }
 
 .circle {
@@ -15,6 +17,7 @@ body,html{
   border-radius: 50%;
   position: absolute;
   background-color: #D13;
+  box-sizing: border-box;
 }
 
 .test {

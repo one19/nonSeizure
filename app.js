@@ -18,8 +18,8 @@ var MINSTREAK = 30; //in fps
 var MAXSTREAK = 120;
 var DELTA = 2;
 
-var pagewidth = $(window).width();
-var pageheight = $(window).height();
+var pagewidth = $(document).width();
+var pageheight = $(document).height() - 70;
 var pageson = {
   widthPriority: {
     top: ['a0', 'a1', 'a2'],
@@ -96,7 +96,7 @@ pageson.background = {
 //creates the circles that will move randomly about the page, and gives them
 //initial locations, and sizes
 //returns an object with their relevant data
-var appendCircles = function(circleCount) {
+var jsonCircles = function(circleCount) {
 
   for (var i = 0; i < circleCount; i++) {
     var selector = 'b' + i;
@@ -108,16 +108,28 @@ var appendCircles = function(circleCount) {
     var left = minToMax( 0 - offset, pagewidth - offset );
     var cNums = makeRandomColor();
 
-    $('.' + selector).css({
-      'width': size + 'px',
-      'height': size + 'px',
-      'top': top + 'px',
-      'left': left + 'px',
-      'background-color': 'rgb('+ cNums[0] + ', '+ cNums[1] + ', '+ cNums[2] + ')'
-    });
-
     pageson.circles.push({
       selector: selector,
+      borderWidth: {
+        val: size * 0.2,
+        streak: minToMax(MINSTREAK, MAXSTREAK),
+        del: plusOrMinus()
+      },
+      bRed: {
+        val: cNums[0],
+        streak: minToMax(MINSTREAK, MAXSTREAK),
+        del: plusOrMinus()
+      },
+      bGreen: {
+        val: cNums[1],
+        streak: minToMax(MINSTREAK, MAXSTREAK),
+        del: plusOrMinus()
+      },
+      bBlue: {
+        val: cNums[2],
+        streak: minToMax(MINSTREAK, MAXSTREAK),
+        del: plusOrMinus()
+      },
       size: {
         val: size,
         streak: minToMax(MINSTREAK, MAXSTREAK),
@@ -153,8 +165,8 @@ var appendCircles = function(circleCount) {
 }
 
 var jsonSquares = function() {
-  var margin = Math.floor(pagewidth * 0.03);
-  var damargin = (margin * 6);
+  var margin = Math.floor(pagewidth * 0.04);
+  var damargin = (margin * 5);
   var cNums = makeRandomColor();
 
   var maxPrimeWidth = Math.floor(pagewidth * 0.4);
@@ -162,15 +174,35 @@ var jsonSquares = function() {
   var maxWidth = Math.floor(pagewidth * 0.25);
   var minWidth = Math.floor(pagewidth * 0.2);
 
-  var maxPrimeHeight = Math.floor( (pageheight - damargin) * 0.4);
-  var minPrimeHeight = Math.floor( (pageheight - damargin) * 0.3);
-  var maxHeight = Math.floor((pageheight - damargin) * 0.25);
-  var minHeight = Math.floor((pageheight - damargin) * 0.2);
+  var maxPrimeHeight = Math.floor( (pageheight - 100 - damargin) * 0.4);
+  var minPrimeHeight = Math.floor( (pageheight - 100 - damargin) * 0.3);
+  var maxHeight = Math.floor((pageheight - 100 - damargin) * 0.25);
+  var minHeight = Math.floor((pageheight - 100 - damargin) * 0.2);
 
   for (var i = 0; i < 9; i++) {
     var cNums = makeRandomColor();
     pageson.squares.push({
       selector: 'a' + i,
+      borderWidth: {
+        val: margin * 0.1,
+        streak: minToMax(MINSTREAK, MAXSTREAK),
+        del: plusOrMinus()
+      },
+      bRed: {
+        val: cNums[0],
+        streak: minToMax(MINSTREAK, MAXSTREAK),
+        del: plusOrMinus()
+      },
+      bGreen: {
+        val: cNums[1],
+        streak: minToMax(MINSTREAK, MAXSTREAK),
+        del: plusOrMinus()
+      },
+      bBlue: {
+        val: cNums[2],
+        streak: minToMax(MINSTREAK, MAXSTREAK),
+        del: plusOrMinus()
+      },
       red: {
         val: cNums[0],
         streak: minToMax(MINSTREAK, MAXSTREAK),
@@ -226,12 +258,12 @@ var jsonSquares = function() {
     for (var k = 0; k < 3; k++) {
       var ind = k + (i * 3);
       if (k === 0) {
-        pageson.squares[ind].left.val = margin;
+        pageson.squares[ind].left.val = 0;
       } else if (k === 1) {
-        pageson.squares[ind].left.val = (margin * 3) +
+        pageson.squares[ind].left.val = (margin * 1.75) +
           pageson.squares[ind - 1].width.val;
       } else {
-        pageson.squares[ind].left.val = (margin * 5) +
+        pageson.squares[ind].left.val = (margin * 3.5) +
           pageson.squares[ind - 1].width.val +
           pageson.squares[ind - 2].width.val;
       }
@@ -260,12 +292,12 @@ var jsonSquares = function() {
       for (var k = 0; k < 3; k++) {
         var ind = (i * 3) + k;
         if (i === 0) {
-          pageson.squares[ind].top.val = margin;
+          pageson.squares[ind].top.val = 0;
         } else if (i === 1) {
-          pageson.squares[ind].top.val = (margin * 3) +
+          pageson.squares[ind].top.val = (margin * 1.75) +
             pageson.squares[ind - 3].height.val;
         } else {
-          pageson.squares[ind].top.val = (margin * 5) +
+          pageson.squares[ind].top.val = (margin * 3.5) +
             pageson.squares[ind - 3].height.val +
             pageson.squares[ind - 6].height.val;
         }
@@ -278,7 +310,12 @@ var makeRandomColor = function() {
   return [minToMax(0,255), minToMax(0,255), minToMax(0,255)];
 }
 
+var makeSelectiveColor = function() {
+  //TODO
+}
+
 var update = function(pjson) {
+  //var pjson = JSON.stringify(JSON.parse(lastState));
   pjson.circles.forEach(function(circle, ind) {
     Object.keys(circle).forEach(function(e) {
       pjson.circles[ind] = updateProperty(e, circle);
@@ -300,25 +337,34 @@ var updateProperty = function (name, obj) {
 
   var maxy = 0;
   var miny = 0;
-  if ((name === 'red') || (name ===  'green') || (name === 'blue')) {
+  if ( ((name === 'red') || (name ===  'green') || (name === 'blue')) ||
+    ((name === 'bRed') || (name === 'bGreen') ||  (name === 'bBlue')) ) {
     maxy = 255;
     miny = 0;
   } else if ((name === 'top') || (name === 'left')) {
     var offset = Math.round(obj.size.val / 2);
-    maxy = pagewidth - offset;
-    if (name === 'top') maxy = pageheight - offset;
-    miny = 0 - offset;
+    maxy = pagewidth - offset - (obj.size.del);
+    if (name === 'top') maxy = pageheight - offset - (obj.size.del);
+    miny = 0 - offset - (obj.size.del);
   } else if (name === 'size') {
     maxy = MAXCIRCLESIZE;
     miny = MINSIZE;
-  } else if ((name === 'width') || (name === 'height'))
+  } else if ((name === 'width') || (name === 'height')) {
+    
+    //TODO MOTHRFUCKER, JUST COPY THAT SHIZ FROM WHENCE YOU FIXED IT BEFORE
 
-  if (obj[name].streak === 0) {
-    obj[name].streak = minToMax(MINSTREAK, MAXSTREAK);
-    obj[name].del = plusOrMinus();
-  } else {
-    obj[name].streak--;
+  } else if (name === 'borderWidth') {
+    miny = 3;
+    maxy = Math.floor(MAXCIRCLESIZE * 0.15);
   }
+
+
+  if (obj[name].streak <= 0) {
+    obj[name].streak = minToMax(MINSTREAK, MAXSTREAK) + 1;
+    obj[name].del = plusOrMinus();
+  }
+  obj[name].streak--;
+  
   var upDVal = obj[name].val + (DELTA * obj[name].del);
   if ((upDVal > maxy) || (upDVal < miny)) obj[name].del = obj[name].del * -1;
   obj[name].val = obj[name].val + (DELTA * obj[name].del);
@@ -330,7 +376,7 @@ var redrawPage = function() {
   var $body = $('body');
   
   update(pageson);
-  $body.children('.circle').remove();
+  $body.children().remove();
   pageson.circles.forEach( function(e) {
     $body.append('<div class="circle ' + e.selector +
       '" style="width: ' + e.size.val +
@@ -338,7 +384,9 @@ var redrawPage = function() {
       'px; top: ' + e.top.val +
       'px; left: ' + e.left.val +
       'px; background-color: rgb(' +
-      e.red.val + ', ' + e.green.val + ', ' + e.blue.val + ');"></div>');
+      e.red.val + ', ' + e.green.val + ', ' + e.blue.val +
+      '); border: ' + e.borderWidth.val + 'px solid rgb(' +
+      e.bRed.val + ', ' + e.bGreen.val + ', ' + e.bBlue.val +');"></div>');
   });
   pageson.squares.forEach( function(e) {
     $body.append('<div class="square ' + e.selector +
@@ -347,18 +395,19 @@ var redrawPage = function() {
       'px; top: ' + e.top.val +
       'px; left: ' + e.left.val +
       'px; background-color: rgb(' +
-      e.red.val + ', ' + e.green.val + ', ' + e.blue.val + ');"></div>');
+      e.red.val + ', ' + e.green.val + ', ' + e.blue.val +
+      '); border: ' + e.borderWidth.val + 'px solid rgb(' +
+      e.bRed.val + ', ' + e.bGreen.val + ', ' + e.bBlue.val +');"></div>');
   });
   $body.css({'background-color': 'rgb(' +
       pageson.background.red.val + ', ' +
       pageson.background.green.val + ', ' +
       pageson.background.blue.val + ')'});
   pagewidth = $body.width();
-  pageheight = $body.height();
 }
 
 
-appendCircles(35);
+jsonCircles(35);
 jsonSquares();
 setInterval(redrawPage, 13);
 
