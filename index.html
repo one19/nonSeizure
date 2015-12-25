@@ -10,21 +10,72 @@
 <body>
   <div class="button flying" id="settingsModal">SETTINGS</div>
   <div class="modal">
+
     <div class="top">
       <h3>Settings</h3>
     </div>
     <div class="content">
+
       <div class="circleSettings settings">
-        <p>Circle Settings</p>
+        <h3>Circle Settings</h3>
         <p>Add/Remove 1 Circle:</p>
         <div id="addCircle" class="button">+</div>
         <div id="removeCircle" class="button">-</div>
         <p>This many circles:</p>
         <input type="integer" id="theCircle">
         <div id="submitCircle" class="button">Submit</div>
+        <br>
+        <p>Turn images on/off:</p>
+        <div id="backToggle" class="button">Toggle</div>
       </div>
-      <div class="squareSettings settings"></div>
-      <div class="otherSettings settings"></div>
+
+      <div class="squareSettings settings">
+        <h3>Square Settings</h3>
+        <p>Width priority:</p>
+        <div id="widthPri0">
+          <div id="w0" class="priority button high">1</div>
+          <div id="w1" class="priority button mid">2</div>
+          <div id="w2" class="priority button">3</div>
+        </div>
+        <div id="widthPri1">
+          <div id="w3" class="priority button">4</div>
+          <div id="w4" class="priority button high">5</div>
+          <div id="w5" class="priority button mid">6</div>
+        </div>
+        <div id="widthPri2">
+          <div id="w6" class="priority button">7</div>
+          <div id="w7" class="priority button mid">8</div>
+          <div id="w8" class="priority button high">9</div>
+        </div>
+
+        <p>Height priority:</p>
+        <div id="heightPri0">
+          <div id="h0" class="priority button high">1</div>
+          <div id="h1" class="priority button mid">2</div>
+          <div id="h2" class="priority button">3</div>
+        </div>
+        <div id="heightPri1">
+          <div id="h3" class="priority button mid">4</div>
+          <div id="h4" class="priority button high">5</div>
+          <div id="h5" class="priority button mid">6</div>
+        </div>
+        <div id="heightPri2">
+          <div id="h6" class="priority button">7</div>
+          <div id="h7" class="priority button">8</div>
+          <div id="h8" class="priority button high">9</div>
+        </div>
+      </div>
+
+      <div class="otherSettings settings">
+        <h3>Other Settings</h3>
+        <p>Time between frames (60fps is 13):</p>
+        <input type="integer" id="theFrames">
+        <div id="submitFrames" class="button">Submit</div>
+        <p>Pixels movement / frame (defualt 2):</p>
+        <input type="integer" id="theDelta">
+        <div id="submitDelta" class="button">Submit</div>
+      </div>
+
     </div>
     <div class="bottom button" id="closeModal">x</div>
   </div>

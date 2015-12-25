@@ -16,7 +16,6 @@ var MINSIZE = 50;
 var MAXCIRCLESIZE = 150;
 var MINSTREAK = 30; //in fps
 var MAXSTREAK = 120;
-var DELTA = 2;
 
 var pagewidth = $(document).width();
 var pageheight = $(document).height() - 70;
@@ -33,7 +32,9 @@ var pageson = {
   },
   squares: [],
   circles: [],
-  ms: 13
+  ms: 13,
+  delta: 2,
+  usePics: false
 }
 
 
@@ -153,6 +154,9 @@ var jsonCircles = function(circleCount) {
         val: cNums[2],
         streak: minToMax(MINSTREAK, MAXSTREAK),
         del: plusOrMinus()
+      },
+      background: {
+        pic: ['katy.png', 'lil.png', 'dru.png', 'sher.png', 'con.png', 'dav.png', 'mom.png', 'dum.png', 'ash.png', 'dad.png'][minToMax(0, 9)]
       },
       top: {
         val: top,
@@ -366,9 +370,9 @@ var updateProperty = function (name, obj) {
   }
   obj[name].streak--;
   
-  var upDVal = obj[name].val + (DELTA * obj[name].del);
+  var upDVal = obj[name].val + (pageson.delta * obj[name].del);
   if ((upDVal > maxy) || (upDVal < miny)) obj[name].del = obj[name].del * -1;
-  obj[name].val = obj[name].val + (DELTA * obj[name].del);
+  obj[name].val = obj[name].val + (pageson.delta * obj[name].del);
 
   return obj;
 }
@@ -379,14 +383,17 @@ var redrawPage = function() {
   update(pageson);
   $cray.children().remove();
   pageson.circles.forEach( function(e) {
+    var backG = '';
+    backG = 'background-color: rgb(' +
+      e.red.val + ', ' + e.green.val + ', ' + e.blue.val +
+      '); ';
+    if (pageson.usePics) backG = 'background-image: url(' + e.background.pic + '); ';
     $cray.append('<div class="circle ' + e.selector +
       '" style="width: ' + e.size.val +
       'px; height: ' + e.size.val +
       'px; top: ' + e.top.val +
       'px; left: ' + e.left.val +
-      'px; background-color: rgb(' +
-      e.red.val + ', ' + e.green.val + ', ' + e.blue.val +
-      '); border: ' + e.borderWidth.val + 'px solid rgb(' +
+      'px; ' + backG + 'border: ' + e.borderWidth.val + 'px solid rgb(' +
       e.bRed.val + ', ' + e.bGreen.val + ', ' + e.bBlue.val +');"></div>');
   });
   pageson.squares.forEach( function(e) {
@@ -414,7 +421,6 @@ jsonSquares();
 var intervalID = setInterval(redrawPage, pageson.ms);
 
 $('.button').on('click', function(e) {
-  console.log(e)
   if (e.target.id === 'settingsModal') {
     clearInterval(intervalID);
     intervalID = setInterval(redrawPage, 500);
@@ -432,11 +438,22 @@ $('.button').on('click', function(e) {
   } else if (e.target.id === 'submitCircle') {
     jsonCircles(0);
     jsonCircles(parseInt($('#theCircle').val()));
+  } else if (e.target.id === 'backToggle') {
+    if (pageson.usePics === false) { 
+      pageson.usePics = true;
+    } else {
+      pageson.usePics = false;
+    }
+  } else if (e.target.id === 'submitFrames') {
+    pageson.ms = $('#theFrames').val();
+  } else if (e.target.id === 'submitDelta') {
+    pageson.delta = $('#theDelta').val();
   }
-
 });
 
-$('#theCircle').on('enter', function() {
+$('document').on('enter', function() {
+  event.preventDefault();
+  console.log('butter')
   jsonCircles(0);
   jsonCircles(parseInt($('#theCircle').val()));
 })
