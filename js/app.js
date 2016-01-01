@@ -389,7 +389,7 @@ var redrawPage = function() {
     backG = 'background-color: rgb(' +
       e.red.val + ', ' + e.green.val + ', ' + e.blue.val +
       '); ';
-    if (pageson.usePics) backG = 'background-image: url(' + e.background.pic + '); ';
+    if (pageson.usePics) backG = 'background-image: url(pics/' + e.background.pic + '); ';
     $cray.append('<div class="circle ' + e.selector +
       '" style="width: ' + e.size.val +
       'px; height: ' + e.size.val +
