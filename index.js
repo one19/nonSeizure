@@ -16,15 +16,16 @@ app.use('/pics', express.static(__dirname + '/pics'));
 app.get('/', function(req, res) {
   //res.send('Hello world!');
 
-  // fs.readdir('pics', function(err, list) {
-  //   if (err) throw err;
-  //   pics = list;
-  // }).done( function() {
-  // });
-  res.render('index');
+  fs.readdir('pics', function(err, list) {
+    if (err) throw err;
+    pics = list;
+  });
+  res.render('index', {pics: pics});
   
 });
 
 var server = app.listen(3002, function() {
   console.log('Server running at http://localhost:' + server.address().port)
 });
+
+module.exports = app;

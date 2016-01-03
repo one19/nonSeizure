@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "electron main.js",
+    "node": "node index.js",
     "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -14,9 +15,11 @@
   "dependencies": {
     "consolidate": "^0.13.1",
     "ejs": "^2.3.4",
+    "electron": "^0.4.1",
     "express": "^4.13.3"
   },
   "devDependencies": {
+    "electron-prebuilt": "^0.36.2",
     "nodemon": "^1.8.1"
   }
 }
