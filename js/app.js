@@ -1,13 +1,12 @@
 /**
+   _____ _      ____  ____          _       __      __     _____   _____
+  / ____| |    / __ \|  _ \   /\   | |      \ \    / /\   |  __ \ / ____|
+ | |  __| |   | |  | | |_) | /  \  | |       \ \  / /  \  | |__) | (___
+ | | |_ | |   | |  | |  _ < / /\ \ | |        \ \/ / /\ \ |  _  / \___ \
+ | |__| | |___| |__| | |_) / ____ \| |____     \  / ____ \| | \ \ ____) |
+  \_____|______\____/|____/_/    \_\______|     \/_/    \_\_|  \_\_____/
 
-  ____ _     ___  ____    _    _      __     ___    ____  ____  
- / ___| |   / _ \| __ )  / \  | |     \ \   / / \  |  _ \/ ___| 
-| |  _| |  | | | |  _ \ / _ \ | |      \ \ / / _ \ | |_) \___ \ 
-| |_| | |__| |_| | |_) / ___ \| |___    \ V / ___ \|  _ < ___) |
- \____|_____\___/|____/_/   \_\_____|    \_/_/   \_\_| \_\____/ 
-                                                                
-
-**/
+http://patorjk.com/software/taag/#p=display&f=Big&t=GLOBAL%20VARS **/
 
 var MINCIRCLES = 15;
 var MAXCIRCLES = 25;
@@ -37,15 +36,17 @@ var pageson = {
   pageWidth: window.innerWidth
 }
 
+//ffiiiiiine, i'll make it all pastel-colored, is that acceptable?
+var minColor = 130;
+var maxColor = 230;
 
 /**
-
- _____ _   _ _   _  ____ _____ ___ ___  _   _ ____  
-|  ___| | | | \ | |/ ___|_   _|_ _/ _ \| \ | / ___| 
-| |_  | | | |  \| | |     | |  | | | | |  \| \___ \ 
-|  _| | |_| | |\  | |___  | |  | | |_| | |\  |___) |
-|_|    \___/|_| \_|\____| |_| |___\___/|_| \_|____/ 
-                                                    
+  ______ _    _ _   _  _____ _______ _____ ____  _   _  _____
+ |  ____| |  | | \ | |/ ____|__   __|_   _/ __ \| \ | |/ ____|
+ | |__  | |  | |  \| | |       | |    | || |  | |  \| | (___
+ |  __| | |  | | . ` | |       | |    | || |  | | . ` |\___ \
+ | |    | |__| | |\  | |____   | |   _| || |__| | |\  |____) |
+ |_|     \____/|_| \_|\_____|  |_|  |_____\____/|_| \_|_____/
 
 **/
 
@@ -93,7 +94,6 @@ pageson.background = {
     del: plusOrMinus()
   }
 }
-
 
 //creates the circles that will move randomly about the page
 //returns an object with their relevant data
@@ -316,11 +316,7 @@ var jsonSquares = function(pjson) {
 }
 
 var makeRandomColor = function() {
-  return [minToMax(0,255), minToMax(0,255), minToMax(0,255)];
-}
-
-var makeSelectiveColor = function() {
-  //TODO
+  return [minToMax(minColor,maxColor), minToMax(minColor,maxColor), minToMax(minColor,maxColor)];
 }
 
 var update = function(pjson) {
@@ -421,6 +417,16 @@ jsonCircles(20, pageson);
 jsonSquares(pageson);
 var intervalID = setInterval(redrawPage, pageson.ms);
 
+/**
+  _      _____  _____ _______ ______ _   _ ______ _____   _____
+ | |    |_   _|/ ____|__   __|  ____| \ | |  ____|  __ \ / ____|
+ | |      | | | (___    | |  | |__  |  \| | |__  | |__) | (___
+ | |      | |  \___ \   | |  |  __| | . ` |  __| |  _  / \___ \
+ | |____ _| |_ ____) |  | |  | |____| |\  | |____| | \ \ ____) |
+ |______|_____|_____/   |_|  |______|_| \_|______|_|  \_\_____/
+
+**/
+
 $('.button').on('click', function(e) {
   if (e.target.id === 'settingsModal') {
     clearInterval(intervalID);
@@ -453,12 +459,13 @@ $('.button').on('click', function(e) {
 });
 
 /**
- _____ _____ ____ _____ ____  
-|_   _| ____/ ___|_   _/ ___| 
-  | | |  _| \___ \ | | \___ \ 
-  | | | |___ ___) || |  ___) |
-  |_| |_____|____/ |_| |____/ 
-                              
+  _______ ______  _____ _______ _____
+ |__   __|  ____|/ ____|__   __/ ____|
+    | |  | |__  | (___    | | | (___
+    | |  |  __|  \___ \   | |  \___ \
+    | |  | |____ ____) |  | |  ____) |
+    |_|  |______|_____/   |_| |_____/
+
 **/
 
 //Input the number of iterations to check the result for bias

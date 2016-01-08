@@ -25,7 +25,7 @@ app.on('ready', function() {
     "node-integration": false
   },
   width: 1080,
-  height: 480});
+  height: 600});
 
   mainWindow.loadURL('http://localhost:3002/');
   //mainWindow.openDevTools();
