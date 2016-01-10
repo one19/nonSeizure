@@ -37,7 +37,7 @@ var pageson = {
 }
 
 //ffiiiiiine, i'll make it all pastel-colored, is that acceptable?
-var minColor = 130;
+var minColor = 170;
 var maxColor = 230;
 
 /**
@@ -347,8 +347,8 @@ var updateProperty = function (name, obj, pjson) {
   var miny = 0;
   if ( ((name === 'red') || (name ===  'green') || (name === 'blue')) ||
     ((name === 'bRed') || (name === 'bGreen') ||  (name === 'bBlue')) ) {
-    maxy = 255;
-    miny = 0;
+    maxy = maxColor;
+    miny = minColor;
   } else if ((name === 'top') || (name === 'left')) {
     var offset = Math.round(obj.size.val / 2);
     maxy = pjson.pageWidth - offset - (obj.size.del);

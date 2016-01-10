@@ -13,14 +13,17 @@ app.use('/css', express.static(__dirname + '/css'));
 app.use('/js', express.static(__dirname + '/js'));
 app.use('/pics', express.static(__dirname + '/pics'));
 
-app.get('/', function(req, res) {
-  //res.send('Hello world!');
-
+app.get('/findPics', function(req, res) {
   fs.readdir('pics', function(err, list) {
     if (err) throw err;
     pics = list;
   });
-  res.render('index', {pics: pics});
+  res = pics;
+});
+
+app.get('/', function(req, res) {
+  //res.send('Hello world!');
+  res.render('index');
   
 });
 
